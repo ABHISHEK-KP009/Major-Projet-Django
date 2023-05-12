@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Online Assessment</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+        textarea {
+            display: block;
+            margin: 0 auto;
+            width: 80%;
+            height: 200px;
+            border: 2px solid #000;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        
+		form {
+			margin: 20px;
+		}
+		label {
+			display: block;
+			margin-bottom: 10px;
+		}
+		input[type="submit"] {
+			margin-top: 10px;
+            float: right;
+		}
+        h1 {
+            text-align: center;
+        }
+	</style>
+</head>
+<body>
+	<h1>Online Assessment</h1>
+	<form id="question-form">
+		<label for="question"><h3>Question 1:Enter the following text in the text area</h3></label>
+        <p>The quick brown fox jumps over the lazy dog! 1234567890 #@$%^&*()_+-=[]{}|;:'",.<>?/</p>
+		<textarea id="question" placeholder="Write your answer here"></textarea>
+		<input type="submit" value="Next">
+	</form>
+    <script>"../js/keystroke.js"</script>
+	<script>
+		const questionForm = document.getElementById("question-form");
+		
+		questionForm.addEventListener('submit', event => {
+			event.preventDefault(); // prevent form from submitting
+			const formData = new FormData(event.target); // get form data
+			const answer = formData.get('question'); // get the answer
+			console.log(answer); // replace console.log with your own code to handle the answer
+			//window.location.href = "question2.html"; // redirect to the next question
+		});
+	</script>
+</body>
+</html>
