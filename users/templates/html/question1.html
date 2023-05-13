@@ -38,19 +38,99 @@
 		<label for="question"><h3>Question 1:Enter the following text in the text area</h3></label>
         <p>The quick brown fox jumps over the lazy dog! 1234567890 #@$%^&*()_+-=[]{}|;:'",.<>?/</p>
 		<textarea id="question" placeholder="Write your answer here"></textarea>
-		<input type="submit" value="Next">
+		<input type="submit" id="next-btn" value="Next">
 	</form>
-    <script>"../js/keystroke.js"</script>
-	<script>
-		const questionForm = document.getElementById("question-form");
+    <script>
+		    const questionForm = document.getElementById("question-form");
 		
-		questionForm.addEventListener('submit', event => {
+		    questionForm.addEventListener('submit', event => {
 			event.preventDefault(); // prevent form from submitting
 			const formData = new FormData(event.target); // get form data
 			const answer = formData.get('question'); // get the answer
-			console.log(answer); // replace console.log with your own code to handle the answer
+			//console.log(answer); // replace console.log with your own code to handle the answer
 			//window.location.href = "question2.html"; // redirect to the next question
 		});
 	</script>
+    <script>
+        let textBox = document.getElementById('question');
+        const btn = document.getElementById('next-btn');
+        const data = [];
+        
+        const Key = [];
+        const downTime = [];
+        const upTime = [];
+        let keyCount = 0; // variable to count number of keys pressed
+        let wordCount = 0; // variable to count number of words pressed
+        let backspaceCount = 0; // variable to count number of times backspace is pressed
+        
+        // const start = new Date().getTime();
+        
+        textBox.addEventListener('keydown', (event) => {
+            // const downtime = new Date().getTime() - start;
+            const downtime = Date.now();
+            downTime.push(downtime);
+        });
+        
+        textBox.addEventListener('keyup', (event) => {
+            // const uptime = new Date().getTime() - start;
+            const uptime = Date.now();
+            const key = event.key;
+            upTime.push(uptime);
+            Key.push(key);
+        
+            // count number of keys pressed
+            keyCount++;
+        
+            // count number of words pressed
+            if (event.key === ' ' && textBox.value.trim() !== '') {
+                wordCount++;
+            }
+            
+        
+            // count number of times backspace is pressed
+            if (event.key === 'Backspace') {
+                backspaceCount++;
+            }
+        });
+        wordCount++;
+        
+        btn.addEventListener('click', (e) => {
+            for (let i = 0; i < Key.length; i++) {
+                data.push({
+                    key: Key[i],
+                    downtime: downTime[i],
+                    uptime: upTime[i],
+                    dwellTime: upTime[i] - downTime[i],
+                    flightTime: Math.abs(downTime[i+1] - upTime[i]),
+                    keyDownTime: Math.abs(downTime[i+1] - downTime[i])
+        
+                });
+            }
+            let csv = 'Key,Down Time,Up Time,Dwell Time,Flight Time,Key Down Time\n';
+                    for (let i = 0; i < data.length; i++) {
+                        csv += `${data[i].key},${data[i].downtime},${data[i].uptime},${data[i].dwellTime},${data[i].flightTime},${data[i].keyDownTime}\n`;
+                    }
+            
+                    // Create a Blob object from the CSV string
+                    const blob = new Blob([csv], {type: 'text/csv'});
+                    
+                    // Create a download link and trigger the download
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = 'data.csv';
+                    link.click();
+            
+                
+            
+            console.log('Number of keys pressed: ', keyCount);
+            console.log('Number of words pressed: ', wordCount);
+            console.log('Number of times backspace is pressed: ', backspaceCount);
+            localStorage.setItem("keyCount", keyCount);
+            localStorage.setItem("wordCount",wordCount);
+            localStorage.setItem("backspaceCount", backspaceCount);
+            localStorage.setItem("data", JSON.stringify(data));
+        });
+        </script>
+	
 </body>
 </html>
