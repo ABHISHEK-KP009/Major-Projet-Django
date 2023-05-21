@@ -101,14 +101,14 @@
                     downtime: downTime[i],
                     uptime: upTime[i],
                     dwellTime: upTime[i] - downTime[i],
-                    flightTime: Math.abs(downTime[i+1] - upTime[i]),
-                    keyDownTime: Math.abs(downTime[i+1] - downTime[i])
+                    flightTime: Math.abs(downTime[i+1] - downTime[i]),
+                    latency: Math.abs(downTime[i+1] - upTime[i])
         
                 });
             }
-            let csv = 'Key,Down Time,Up Time,Dwell Time,Flight Time,Key Down Time\n';
+            let csv = 'Key,Down_Time,Up_Time,Dwell_Time,Flight_Time,latency\n';
                     for (let i = 0; i < data.length; i++) {
-                        csv += `${data[i].key},${data[i].downtime},${data[i].uptime},${data[i].dwellTime},${data[i].flightTime},${data[i].keyDownTime}\n`;
+                        csv += `${data[i].key},${data[i].downtime},${data[i].uptime},${data[i].dwellTime},${data[i].flightTime},${data[i].latency}\n`;
                     }
             
                     // Create a Blob object from the CSV string
